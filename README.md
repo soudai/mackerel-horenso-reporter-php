@@ -30,7 +30,9 @@ $ /usr/local/bin/composer install
 horensoのreporterにmackerel-horenso-reporter-phpを指定して実行する
 
 ```shell script
-$ /{path}/horenso -t {batch_name} -r '/{path}/php /{path}/mackerel-horenso-reporter-php/reporter.php' -- '/{path}/to/job args...'
+$ /{path}/horenso -t {batch_name} \ 
+  -r '/{path}/php /{path}/mackerel-horenso-reporter-php/reporter.php' \ 
+  -- '/{path}/to/job args...'
 ```
 
 # blog
