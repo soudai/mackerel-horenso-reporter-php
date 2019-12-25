@@ -51,10 +51,10 @@ function get_horenso_report()
  *
  * https://www.php.net/manual/ja/datetime.createfromformat.php
  */
-function get_datetime_for_php($datetime_ISO8601_ns)
+function get_datetime_for_php($datetime_RFC3339Nano)
 {
     $pattern = '/^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})(\\.\\d{8})\\d*(.*)/';
-    return preg_replace($pattern, '$1$2$3', $datetime_ISO8601_ns);
+    return preg_replace($pattern, '$1$2$3', $datetime_RFC3339Nano);
 }
 
 function get_execution_time($report)
