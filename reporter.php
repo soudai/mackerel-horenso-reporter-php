@@ -39,10 +39,28 @@ function get_horenso_report()
     return json_decode($json);
 }
 
+/**
+ * PHPのDatetimeは小数点8桁までしかサポートしていない
+ * そのため Songmu/horenso のdatetimeを受け取れないことがある
+ * よって8桁に合わせる
+ *
+ * https://github.com/Songmu/horenso/blob/a83321ce21d2d779505a7375acb664f15d687d2a/horenso.go#L331
+ *
+ * > when turning time.Time to JSON with json.Marshal()).
+ * > Currently there is no other solution than using a separate parsing library to get correct dates.
+ *
+ * https://www.php.net/manual/ja/datetime.createfromformat.php
+ */
+function get_datetime_for_php($datetime_ISO8601_ns)
+{
+    $pattern = '/^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})(\\.\\d{8})\\d*(.*)/';
+    return preg_replace($pattern, '$1$2$3', $datetime_ISO8601_ns);
+}
+
 function get_execution_time($report)
 {
-    $start_at = new DateTime($report->startAt);
-    $end_at = new DateTime($report->endAt);
+    $start_at = new DateTime(get_datetime_for_php($report->startAt));
+    $end_at = new DateTime(get_datetime_for_php($report->endAt));
     $execution_time = $end_at->getTimestamp() - $start_at->getTimestamp();
     return $execution_time;
 }
@@ -51,11 +69,11 @@ function make_annotation($mackerel_service_name, $batch_name, $execution_time, $
 {
     $annotation = new \Mackerel\GraphAnnotation();
 
-    $start_at = new DateTime($report->startAt);
+    $start_at = new DateTime(get_datetime_for_php($report->startAt));
     $start_at_string = $start_at->setTimezone(new DateTimeZone('Asia/Tokyo'))
         ->format('Y-m-d H:i:s');
 
-    $end_at = new DateTime($report->endAt);
+    $end_at = new DateTime(get_datetime_for_php($report->endAt));
     $end_at_string = $end_at->setTimezone(new DateTimeZone('Asia/Tokyo'))
         ->format('Y-m-d H:i:s');
 
