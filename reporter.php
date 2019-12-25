@@ -67,7 +67,7 @@ function get_execution_time($report)
 
 function make_annotation($mackerel_service_name, $batch_name, $execution_time, $report)
 {
-    $annotation = new \Mackerel\GraphAnnotation();
+    $annotation = new \Mackerel\Objects\GraphAnnotation();
 
     $start_at = new DateTime(get_datetime_for_php($report->startAt));
     $start_at_string = $start_at->setTimezone(new DateTimeZone('Asia/Tokyo'))
